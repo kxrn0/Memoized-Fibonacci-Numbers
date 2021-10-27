@@ -4,33 +4,35 @@
 #include <limits>
 #include <string>
 
-std::vector<unsigned long long> uvFibos;
-
-unsigned long long mem_fibo(unsigned uPos) {
-  if (uPos > uvFibos.size() - 1) {
-    uvFibos.push_back(mem_fibo(uPos - 1) + mem_fibo(uPos - 2));
-  }
-  return uvFibos[uPos];
-}
-
 unsigned long long fibo(unsigned uPos) {
-  return mem_fibo(uPos);
+  static std::vector<unsigned long long> vFibos;
+  if (!vFibos.size()) {
+    vFibos.push_back(1);
+    vFibos.push_back(1);
+  }
+
+  if (uPos > vFibos.size() - 1) {
+    vFibos.push_back(fibo(uPos - 1) + fibo(uPos - 2));
+  }
+  return vFibos[uPos];
 }
 
-unsigned enter_number(const std::string& sMessage) {
-  unsigned uNum;
-  while (!(std::cin >> uNum)) {
-    std::cout << sMessage;
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-  }
-  return uNum;
+int enter_number(const std::string& sMessage) {
+  int nNum;
+  do {
+    while (!(std::cin >> nNum)) {
+      std::cout << sMessage;
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+
+    if (nNum < 0)
+      std::cout << "Please enter a positive number : ";
+  } while (nNum < 0);
+  return nNum;
 }
 
 int main() {
-  uvFibos.push_back(1);
-  uvFibos.push_back(1);
-
   bool bExit = false;
   while (!bExit) {
     int nPos;
